@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it using the metadata below."
+type: software
+title: "galvo-drift-correction"
+abstract: >
+  A lightweight Python library for detecting and correcting line-shift artifacts
+  in laser-scanning microscopy images caused by galvo mirror settling delays.
+  The displacement of odd rows relative to even rows is estimated automatically
+  from a single raw image by maximising the normalised cross-correlation between
+  the two interleaved row sub-images, requiring no groundtruth or calibration
+  target.
+authors:
+  - family-names: "Mateos Estevez"
+    given-names: "[Nicolas"
+    orcid: "https://orcid.org/0000-0003-3272-2975"
+    affiliation: "ICFO - The Institute of Photonic Sciences, Barcelona, Spain"
+version: "0.1.0"
+date-released: "2026-04-24"
+license: MIT
+repository-code: "https://github.com/your-username/galvo-drift-correction"
+keywords:
+  - microscopy
+  - laser-scanning microscopy
+  - galvo
+  - image correction
+  - line drift
+  - image processing
+  - fluorescence microscopy
+  - non-linear microscopy
