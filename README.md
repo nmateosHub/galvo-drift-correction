@@ -1,11 +1,29 @@
 # galvo-drift-correction
+
+**Automatic line-shift correction for laser-scanning microscopy images — no groundtruth required.**
+
 Galvo drift correction is a lightweight Python library for detecting and correcting line-shift artifacts in laser-scanning microscopy images caused by galvo mirror settling delays. At high scan speeds, the galvo mirror fails to fully settle between lines, causing every odd row to be displaced horizontally by a fixed number of pixels relative to the even rows. 
 
-## Background
 
-Galvo scanners alternate between scanning odd and even lines. At high scan speeds, finite galvo settling time can offset every odd row by a fixed number of pixels relative to the even rows. This library detects that offset automatically from a single raw image and applies the inverse correction.
+## The problem
+
+At high galvo scan speeds, finite mirror settling time displaces every odd row by a fixed number of pixels relative to the even rows, introducing a characteristic **comb-like shearing** across the image.
+<img width="916" height="669" alt="fig1_raw" src="https://github.com/user-attachments/assets/121038ec-9161-4b70-880a-c49508e5f769" />
+*Synthetic fluorescence image with a +7 px drift on all odd rows. The staircase pattern is visible on any vertical edge.*
+
+---
 
 ## How it works
+
+The image is split into its two interleaved row sets — **even** `[0, 2, 4 …]` and **odd** `[1, 3, 5 …]`. In an undrifted image these two sub-images are highly similar. Galvo drift breaks that similarity by offsetting one set horizontally.
+<img width="1966" height="683" alt="fig2_even_odd" src="https://github.com/user-attachments/assets/4dbd154e-07e4-4925-84f9-b7fc82cf8430" />
+
+Zooming into a single horizontal stripe makes the row-by-row offset immediately visible:
+<img width="1642" height="417" alt="fig3_interleaved" src="https://github.com/user-attachments/assets/6a30cb9f-b87d-42bf-8203-b16f85af5f0e" />
+
+The algorithm rolls the odd sub-image by every candidate shift `s ∈ [−N, N]` and computes the **normalised cross-correlation (NCC)** with the even sub-image. The shift that maximises NCC is the drift:
+
+
 
 ```
 raw image
@@ -20,8 +38,13 @@ raw image
                                                     │
                                              corrected image
 ```
+The score curve peaks sharply at the true drift. The three inset strips show the interleaved reconstruction at the worst, zero, and best candidate shifts:
+<img width="2076" height="1117" alt="fig5_ncc_curve" src="https://github.com/user-attachments/assets/2ce49537-b557-4b9a-80d5-4d5af446c4cc" />
 
-The method relies on horizontal continuity between adjacent rows. It is robust on images with lateral features (edges, textures) and may be unreliable on featureless or purely vertically-striped images.
+Applying the inverse shift restores full alignment:
+
+<img width="1630" height="600" alt="fig4_shifted" src="https://github.com/user-attachments/assets/013a433b-d084-47db-9e88-7d0b0dc6b174" />
+
 
 ## Installation
 
