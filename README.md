@@ -120,6 +120,7 @@ pytest --cov=galvo_drift_correction
 - scikit-image ≥ 0.21
 - matplotlib ≥ 3.7
 - tifffile ≥ 2023.1
+- pytest
 
 ## License
 
